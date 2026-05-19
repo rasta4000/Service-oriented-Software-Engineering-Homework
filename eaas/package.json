@@ -1,0 +1,17 @@
+{
+  "name": "eaas-ethical-as-a-service",
+  "version": "1.0.0",
+  "description": "EaaS – Microservizio Ethical as a Service per la valutazione etica del turismo sostenibile in Abruzzo",
+  "main": "eaas-server.js",
+  "scripts": {
+    "start": "node eaas-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["eaas", "ethics", "tourism", "policy"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}

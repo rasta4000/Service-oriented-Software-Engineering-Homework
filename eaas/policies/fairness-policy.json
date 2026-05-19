@@ -1,0 +1,62 @@
+{
+  "policyId": "POL-FAIRNESS-001",
+  "name": "Equità Distributiva del Turismo",
+  "version": "1.0.0",
+  "description": "Policy che valuta l'equità nella distribuzione dei flussi turistici e la tutela dei piccoli operatori locali. Mira a prevenire la concentrazione delle risorse su pochi siti o grandi operatori a scapito delle comunità locali.",
+  "category": "fairness",
+  "rules": [
+    {
+      "ruleId": "FAIR-01",
+      "name": "Concentrazione flussi turistici",
+      "description": "Il rapporto tra visitatori medi e capacità massima non deve superare l'80%, per garantire una distribuzione equa dei flussi e una esperienza di qualità per tutti.",
+      "field": "visitatoriMediGiornalieri",
+      "relatedField": "capacitaMassima",
+      "condition": "ratio_max",
+      "threshold": 0.80,
+      "severity": "high",
+      "violationMessage": "Il sito riceve un flusso turistico sproporzionato rispetto alla capacità. Consigliare redistribuzione verso siti alternativi meno frequentati."
+    },
+    {
+      "ruleId": "FAIR-02",
+      "name": "Tutela micro e piccoli operatori",
+      "description": "I produttori locali di dimensione 'micro' o 'piccolo' devono ricevere visibilità adeguata. Se un sito è associato solo a operatori 'grande', si genera un alert di equità.",
+      "field": "dimensioneOperatore",
+      "condition": "in",
+      "threshold": ["micro", "piccolo"],
+      "severity": "medium",
+      "favorCondition": true,
+      "violationMessage": "Il sito è associato prevalentemente a grandi operatori commerciali. Promuovere la visibilità dei micro/piccoli produttori locali."
+    },
+    {
+      "ruleId": "FAIR-03",
+      "name": "Accessibilità universale",
+      "description": "I siti con accessibilità 'assente' per persone con disabilità rappresentano una barriera all'equità di accesso al turismo.",
+      "field": "accessibilitaDisabili",
+      "condition": "equals",
+      "threshold": "assente",
+      "severity": "high",
+      "violationMessage": "Il sito non è accessibile a persone con disabilità. Questo viola il principio di equità nell'accesso al patrimonio culturale e naturale."
+    },
+    {
+      "ruleId": "FAIR-04",
+      "name": "Diversificazione dell'offerta per provincia",
+      "description": "Ogni provincia dovrebbe avere una distribuzione equa di siti promossi. Il sistema verifica che non ci sia eccessivo sbilanciamento.",
+      "field": "provincia",
+      "condition": "distribution_check",
+      "threshold": 0.40,
+      "severity": "low",
+      "violationMessage": "Eccessiva concentrazione di risorse turistiche promosse nella stessa provincia. Favorire la diversificazione territoriale."
+    }
+  ],
+  "scoringWeights": {
+    "FAIR-01": 0.30,
+    "FAIR-02": 0.25,
+    "FAIR-03": 0.30,
+    "FAIR-04": 0.15
+  },
+  "complianceThresholds": {
+    "compliant": 75,
+    "partiallyCompliant": 45,
+    "nonCompliant": 0
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "policyId": "POL-PRIVACY-001",
+  "name": "Privacy e Protezione dei Dati Personali",
+  "version": "1.0.0",
+  "description": "Policy che valuta il rispetto della privacy dei visitatori e dei dati personali raccolti nei siti turistici. Verifica la conformità con i principi del GDPR e la minimizzazione dei dati.",
+  "category": "privacy",
+  "rules": [
+    {
+      "ruleId": "PRIV-01",
+      "name": "Anonimizzazione dati visitatori",
+      "description": "I dati aggregati (visitatoriMediGiornalieri) non devono permettere l'identificazione individuale. Il rapporto visitatori/capacità non deve scendere sotto 5, altrimenti i dati diventano potenzialmente de-anonimizzabili.",
+      "field": "visitatoriMediGiornalieri",
+      "relatedField": "capacitaMassima",
+      "condition": "ratio_min",
+      "threshold": 5,
+      "severity": "high",
+      "violationMessage": "Il basso numero di visitatori rispetto alla capacità rende i dati potenzialmente identificabili. Applicare tecniche di k-anonymity."
+    },
+    {
+      "ruleId": "PRIV-02",
+      "name": "Protezione dati geolocalizzazione",
+      "description": "I siti che raccolgono dati di geolocalizzazione (coordinate GPS) all'interno di aree protette richiedono consenso esplicito e limitazione temporale della conservazione.",
+      "field": "areaProtetta",
+      "condition": "equals",
+      "threshold": true,
+      "severity": "medium",
+      "violationMessage": "Il sito è in area protetta: i dati di geolocalizzazione dei visitatori devono essere anonimizzati o cancellati entro 24 ore."
+    },
+    {
+      "ruleId": "PRIV-03",
+      "name": "Minimizzazione dati accessibilità",
+      "description": "Le informazioni sull'accessibilità per disabili devono essere trattate come dati sensibili (ex art. 9 GDPR) se combinate con dati individuali.",
+      "field": "accessibilitaDisabili",
+      "condition": "not_equals",
+      "threshold": "completa",
+      "severity": "low",
+      "violationMessage": "Il sito ha accessibilità limitata: garantire che le segnalazioni di necessità speciali non vengano associate a profili individuali dei visitatori."
+    }
+  ],
+  "scoringWeights": {
+    "PRIV-01": 0.50,
+    "PRIV-02": 0.30,
+    "PRIV-03": 0.20
+  },
+  "complianceThresholds": {
+    "compliant": 80,
+    "partiallyCompliant": 50,
+    "nonCompliant": 0
+  }
+}

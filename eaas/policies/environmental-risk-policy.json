@@ -1,0 +1,74 @@
+{
+  "policyId": "POL-ENVRISK-001",
+  "name": "Rischio Ambientale e Sanitario",
+  "version": "1.0.0",
+  "description": "Policy che valuta il livello di rischio ambientale e sanitario legato al turismo. Monitora il sovraffollamento, l'impatto su ecosistemi sensibili e la sicurezza dei visitatori.",
+  "category": "environmental_risk",
+  "rules": [
+    {
+      "ruleId": "ENV-01",
+      "name": "Sovraffollamento critico",
+      "description": "I siti con rischio sovraffollamento 'alto' o 'critico' rappresentano un pericolo sia per l'ambiente che per la sicurezza dei visitatori.",
+      "field": "rischioSovraffollamento",
+      "condition": "in",
+      "threshold": ["alto", "critico"],
+      "severity": "critical",
+      "violationMessage": "ATTENZIONE: il sito presenta un livello di sovraffollamento pericoloso. Rischio per la sicurezza dei visitatori e per la conservazione del sito."
+    },
+    {
+      "ruleId": "ENV-02",
+      "name": "Superamento capacità di carico",
+      "description": "Se i visitatori medi giornalieri superano la capacità massima, il sito è sotto stress ambientale e sanitario.",
+      "field": "visitatoriMediGiornalieri",
+      "relatedField": "capacitaMassima",
+      "condition": "exceeds",
+      "threshold": 1.0,
+      "severity": "critical",
+      "violationMessage": "I visitatori giornalieri superano la capacità massima del sito. Impatto ambientale e rischio sanitario elevato. Necessario contingentamento immediato."
+    },
+    {
+      "ruleId": "ENV-03",
+      "name": "Impatto su ecosistema sensibile",
+      "description": "I siti con sensibilità ambientale 'alta' o 'protetta' richiedono misure di mitigazione dell'impatto turistico.",
+      "field": "sensibilitaAmbientale",
+      "condition": "in",
+      "threshold": ["alta", "protetta"],
+      "severity": "high",
+      "violationMessage": "Il sito si trova in un ecosistema ad alta sensibilità ambientale. L'impatto del turismo deve essere attentamente monitorato e mitigato."
+    },
+    {
+      "ruleId": "ENV-04",
+      "name": "Combinazione rischio-area protetta",
+      "description": "Un sito in area protetta con rischio sovraffollamento superiore a 'basso' rappresenta una criticità ambientale combinata.",
+      "field": "areaProtetta",
+      "relatedField": "rischioSovraffollamento",
+      "condition": "combined_risk",
+      "thresholdField1": true,
+      "thresholdField2": ["medio", "alto", "critico"],
+      "severity": "high",
+      "violationMessage": "Area protetta con rischio sovraffollamento: l'integrità dell'ecosistema è a rischio. Intervenire con politiche di accesso limitato."
+    },
+    {
+      "ruleId": "ENV-05",
+      "name": "Rischio sicurezza sentieri difficili",
+      "description": "Percorsi con difficoltà EE o EEA e accessibilità assente devono segnalare rischi sanitari per visitatori impreparati.",
+      "field": "difficolta",
+      "condition": "in",
+      "threshold": ["EE", "EEA"],
+      "severity": "medium",
+      "violationMessage": "Sentiero ad alta difficoltà tecnica: rischio sanitario per escursionisti impreparati. Necessaria informazione preventiva obbligatoria."
+    }
+  ],
+  "scoringWeights": {
+    "ENV-01": 0.25,
+    "ENV-02": 0.25,
+    "ENV-03": 0.20,
+    "ENV-04": 0.20,
+    "ENV-05": 0.10
+  },
+  "complianceThresholds": {
+    "compliant": 70,
+    "partiallyCompliant": 40,
+    "nonCompliant": 0
+  }
+}
