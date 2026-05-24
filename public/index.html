@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turismo Etico Abruzzo – Dashboard</title>
+  <meta name="description" content="Dashboard per il turismo sostenibile ed etico in Abruzzo. DaaS + EaaS.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🏔️</span>
+      <div class="brand-text">Turismo Etico<small>Abruzzo</small></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-page="dashboard" id="nav-dashboard">
+        <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" data-page="explore" id="nav-explore">
+        <span class="nav-icon">🗺️</span><span class="nav-label">Esplora Dati</span>
+      </a>
+      <a href="#" class="nav-item" data-page="evaluate" id="nav-evaluate">
+        <span class="nav-icon">⚖️</span><span class="nav-label">Valutazione</span>
+      </a>
+      <a href="#" class="nav-item" data-page="scenarios" id="nav-scenarios">
+        <span class="nav-icon">🧪</span><span class="nav-label">Scenari Test</span>
+      </a>
+      <a href="#" class="nav-item" data-page="audit" id="nav-audit">
+        <span class="nav-icon">📋</span><span class="nav-label">Audit Trail</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="status-indicator">
+        <span class="status-dot" id="daas-status"></span><span>DaaS</span>
+      </div>
+      <div class="status-indicator">
+        <span class="status-dot" id="eaas-status"></span><span>EaaS</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main class="main-content">
+
+    <!-- ===== DASHBOARD ===== -->
+    <section class="page active" id="page-dashboard">
+      <header class="page-header">
+        <h1>Dashboard</h1>
+        <p class="page-subtitle">Panoramica del sistema di turismo etico</p>
+      </header>
+
+      <div class="stats-grid" id="dashboard-stats">
+        <div class="stat-card">
+          <div class="stat-icon">📍</div>
+          <div class="stat-value" id="stat-poi">–</div>
+          <div class="stat-label">Punti di Interesse</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🥾</div>
+          <div class="stat-value" id="stat-trails">–</div>
+          <div class="stat-label">Sentieri</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎭</div>
+          <div class="stat-value" id="stat-events">–</div>
+          <div class="stat-label">Eventi</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-value" id="stat-risky">–</div>
+          <div class="stat-label">Siti a Rischio</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Scenari Rapidi</h2>
+      <div class="quick-scenarios">
+        <button class="scenario-btn proceed" onclick="runQuickScenario('CattedraleSanBerardo')" id="btn-quick-proceed">
+          <span class="scenario-light green"></span>
+          <div>
+            <strong>Scenario Virtuoso</strong>
+            <small>Cattedrale di San Berardo → PROCEED</small>
+          </div>
+        </button>
+        <button class="scenario-btn reject" onclick="runQuickScenario('RoccaCalascio')" id="btn-quick-reject">
+          <span class="scenario-light red"></span>
+          <div>
+            <strong>Scenario Critico</strong>
+            <small>Rocca di Calascio → REJECT</small>
+          </div>
+        </button>
+      </div>
+
+      <div id="quick-result" class="quick-result-panel hidden"></div>
+    </section>
+
+    <!-- ===== ESPLORA DATI ===== -->
+    <section class="page" id="page-explore">
+      <header class="page-header">
+        <h1>Esplora Dati</h1>
+        <p class="page-subtitle">Interroga il Data-as-a-Service (DaaS)</p>
+      </header>
+
+      <div class="tabs" id="explore-tabs">
+        <button class="tab active" data-tab="poi" id="tab-poi">Punti di Interesse</button>
+        <button class="tab" data-tab="trails" id="tab-trails">Sentieri</button>
+        <button class="tab" data-tab="events" id="tab-events">Eventi</button>
+        <button class="tab" data-tab="risky" id="tab-risky">Siti a Rischio</button>
+        <button class="tab" data-tab="search" id="tab-search">🔍 Ricerca</button>
+      </div>
+
+      <!-- Search bar (shown only on search tab) -->
+      <div class="search-bar hidden" id="search-bar">
+        <input type="text" id="search-input" placeholder="Cerca per nome o descrizione..." autocomplete="off">
+        <button onclick="doSearch()" id="btn-search">Cerca</button>
+      </div>
+
+      <!-- Province filter (shown on POI tab) -->
+      <div class="filter-bar" id="poi-filter">
+        <label>Provincia:</label>
+        <select id="provincia-select">
+          <option value="">Tutte</option>
+          <option value="L'Aquila">L'Aquila</option>
+          <option value="Chieti">Chieti</option>
+          <option value="Teramo">Teramo</option>
+          <option value="Pescara">Pescara</option>
+        </select>
+        <button onclick="loadPOIByProvincia()" id="btn-filter-prov">Filtra</button>
+      </div>
+
+      <!-- Difficulty filter (shown on trails tab) -->
+      <div class="filter-bar hidden" id="trail-filter">
+        <label>Difficoltà:</label>
+        <select id="difficulty-select">
+          <option value="">Tutte</option>
+          <option value="T">T – Turistico</option>
+          <option value="E">E – Escursionistico</option>
+          <option value="EE">EE – Escursionisti Esperti</option>
+          <option value="EEA">EEA – Attrezzato</option>
+        </select>
+        <button onclick="loadTrails()" id="btn-filter-diff">Filtra</button>
+      </div>
+
+      <div class="data-grid" id="explore-results">
+        <div class="loading-placeholder">Seleziona un tab per esplorare i dati</div>
+      </div>
+    </section>
+
+    <!-- ===== VALUTAZIONE ETICA ===== -->
+    <section class="page" id="page-evaluate">
+      <header class="page-header">
+        <h1>Valutazione Etica</h1>
+        <p class="page-subtitle">Sottoponi un'entità all'Ethics-as-a-Service (EaaS)</p>
+      </header>
+
+      <div class="eval-form glass-card">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="eval-type">Tipo di entità</label>
+            <select id="eval-type">
+              <option value="site">Sito (POI)</option>
+              <option value="trail">Sentiero</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="eval-id">ID Entità</label>
+            <select id="eval-id">
+              <option value="">Caricamento...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="eval-user">Richiesto da</label>
+            <input type="text" id="eval-user" value="studente" placeholder="Nome utente">
+          </div>
+        </div>
+        <button class="btn-primary" onclick="runEvaluation()" id="btn-evaluate">
+          ⚖️ Esegui Valutazione Etica
+        </button>
+      </div>
+
+      <div id="eval-result" class="eval-result-panel hidden"></div>
+    </section>
+
+    <!-- ===== SCENARI DI TEST ===== -->
+    <section class="page" id="page-scenarios">
+      <header class="page-header">
+        <h1>Scenari di Test</h1>
+        <p class="page-subtitle">Due scenari che dimostrano il funzionamento del sistema etico</p>
+      </header>
+
+      <div class="scenarios-grid">
+        <!-- Scenario Virtuoso -->
+        <div class="scenario-card proceed-card">
+          <div class="scenario-header">
+            <span class="traffic-light-mini green"></span>
+            <h2>Scenario Virtuoso</h2>
+          </div>
+          <div class="scenario-entity">
+            <strong>Cattedrale di San Berardo – Teramo</strong>
+            <span class="badge badge-safe">Rischio: basso</span>
+          </div>
+          <p class="scenario-desc">
+            Sito storico-culturale con <strong>basso rischio di sovraffollamento</strong>,
+            <strong>accessibilità completa</strong> per disabili, <strong>non</strong> in area protetta,
+            e visitatori ben al di sotto della capacità massima. Rappresenta un modello di
+            turismo sostenibile e inclusivo.
+          </p>
+          <div class="scenario-expect">
+            <span class="expect-label">Risultato atteso:</span>
+            <span class="decision-badge proceed">PROCEED ✅</span>
+          </div>
+          <button class="btn-primary" onclick="runScenario('CattedraleSanBerardo', 'proceed')" id="btn-scenario-proceed">
+            ▶ Esegui Scenario
+          </button>
+          <div class="scenario-result" id="result-proceed"></div>
+        </div>
+
+        <!-- Scenario Critico -->
+        <div class="scenario-card reject-card">
+          <div class="scenario-header">
+            <span class="traffic-light-mini red"></span>
+            <h2>Scenario Critico</h2>
+          </div>
+          <div class="scenario-entity">
+            <strong>Rocca di Calascio</strong>
+            <span class="badge badge-danger">Rischio: critico</span>
+          </div>
+          <p class="scenario-desc">
+            Fortezza medievale in <strong>area protetta</strong> con rischio sovraffollamento
+            <strong>critico</strong>, visitatori che <strong>superano la capacità massima</strong>
+            (600/500), accessibilità <strong>assente</strong> e sensibilità ambientale
+            <strong>alta</strong>. Accumula violazioni su tutte e 3 le policy etiche.
+          </p>
+          <div class="scenario-expect">
+            <span class="expect-label">Risultato atteso:</span>
+            <span class="decision-badge reject">REJECT 🛑</span>
+          </div>
+          <button class="btn-primary btn-danger" onclick="runScenario('RoccaCalascio', 'reject')" id="btn-scenario-reject">
+            ▶ Esegui Scenario
+          </button>
+          <div class="scenario-result" id="result-reject"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== AUDIT TRAIL ===== -->
+    <section class="page" id="page-audit">
+      <header class="page-header">
+        <h1>Audit Trail</h1>
+        <p class="page-subtitle">Registro delle valutazioni etiche effettuate</p>
+      </header>
+
+      <div class="audit-controls glass-card">
+        <div class="form-group">
+          <label for="audit-date">Data</label>
+          <input type="date" id="audit-date">
+        </div>
+        <button class="btn-primary" onclick="loadAudit()" id="btn-load-audit">📋 Carica Log</button>
+      </div>
+
+      <div id="audit-results"></div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

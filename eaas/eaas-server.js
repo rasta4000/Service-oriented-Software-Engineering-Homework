@@ -309,6 +309,15 @@ function evaluateEntity(entity, allPolicies) {
     report.overallCompliance = "NON_COMPLIANT";
   }
 
+  // Decisione etica finale (semaforo)
+  if (report.overallCompliance === "COMPLIANT") {
+    report.decision = "PROCEED";
+  } else if (report.overallCompliance === "PARTIALLY_COMPLIANT") {
+    report.decision = "ESCALATE";
+  } else {
+    report.decision = "REJECT";
+  }
+
   // Aggiungi un rationale positivo se non ci sono violazioni
   if (report.rationale.length === 0) {
     report.rationale.push({
@@ -382,6 +391,7 @@ app.post("/api/evaluate/site/:id", async (req, res) => {
       entityName: siteData.nome || id,
       overallScore: evaluation.overallScore,
       overallCompliance: evaluation.overallCompliance,
+      decision: evaluation.decision,
       violationsCount: evaluation.rationale.filter(r => r.severity).length,
       policiesApplied: Object.keys(evaluation.evaluations),
       rationale: evaluation.rationale
@@ -494,7 +504,16 @@ app.post("/api/evaluate/batch", async (req, res) => {
     };
 
     for (const site of sites) {
-      const evaluation = evaluateEntity(site, policies);
+      // Normalizza i nomi dei campi dal DaaS (risky endpoint usa nomi abbreviati)
+      const normalized = {
+        ...site,
+        rischioSovraffollamento: site.rischio || site.rischioSovraffollamento,
+        capacitaMassima: site.capacita || site.capacitaMassima,
+        visitatoriMediGiornalieri: site.visitatori || site.visitatoriMediGiornalieri,
+        accessibilitaDisabili: site.accessibilita || site.accessibilitaDisabili,
+        sensibilitaAmbientale: site.sensibilita || site.sensibilitaAmbientale
+      };
+      const evaluation = evaluateEntity(normalized, policies);
       evaluations.push({
         entityId: site.id,
         entityName: site.nome,

@@ -49,6 +49,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());            // permette chiamate da qualsiasi origine
 app.use(express.json());    // parsing body JSON per eventuali POST
+app.use(express.static(path.join(__dirname, "public"))); // serve il frontend
 
 // Prefissi SPARQL comuni (riutilizzati in ogni query)
 const PREFIXES = `
@@ -127,7 +128,8 @@ app.get("/api/poi/provincia/:provincia", (req, res) => {
   // Estrai il localname dall'URI
   const result = rows.map(r => ({
     ...r,
-    id: r.id.split("#").pop()
+    id: r.id.split("#").pop(),
+    tipo: r.tipo.split("#").pop()
   }));
 
   res.json({ provincia: prov, count: result.length, data: result });
@@ -284,6 +286,46 @@ app.get("/api/sites/risky", (req, res) => {
 });
 
 // ============================================================================
+// ENDPOINT 6 – GET /api/search?q=...
+// Ricerca full-text su nome e descrizione di tutte le risorse.
+// Query SPARQL: usa FILTER + CONTAINS per match parziale case-insensitive.
+// ============================================================================
+app.get("/api/search", (req, res) => {
+  const q = req.query.q;
+  if (!q || q.trim().length === 0) {
+    return res.status(400).json({ error: "Parametro di ricerca 'q' obbligatorio" });
+  }
+
+  // Sanitizzazione base contro SPARQL injection
+  const sanitized = q.replace(/["\\<>{}]/g, "").trim();
+
+  const query = `${PREFIXES}
+    SELECT ?id ?nome ?tipo ?descrizione ?comune ?provincia
+    WHERE {
+      ?id ex:nome ?nome .
+      ?id rdf:type ?tipo .
+      OPTIONAL { ?id ex:descrizione ?descrizione }
+      OPTIONAL { ?id ex:comune ?comune }
+      OPTIONAL { ?id ex:provincia ?provincia }
+      FILTER (
+        CONTAINS(LCASE(STR(?nome)), LCASE("${sanitized}"))
+        || (BOUND(?descrizione) && CONTAINS(LCASE(STR(?descrizione)), LCASE("${sanitized}")))
+      )
+    }
+    ORDER BY ?nome
+  `;
+
+  const rows = sparqlQuery(query);
+  const result = rows.map(r => ({
+    ...r,
+    id: r.id.split("#").pop(),
+    tipo: r.tipo.split("#").pop()
+  }));
+
+  res.json({ query: q, count: result.length, data: result });
+});
+
+// ============================================================================
 // Endpoint radice – documentazione degli endpoint disponibili
 // ============================================================================
 app.get("/", (req, res) => {
@@ -315,6 +357,11 @@ app.get("/", (req, res) => {
         method: "GET",
         path: "/api/sites/risky",
         description: "Siti a rischio: sovraffollamento alto/critico o visitatori > capacità (query multi-condizione)"
+      },
+      {
+        method: "GET",
+        path: "/api/search?q=",
+        description: "Ricerca full-text su nome e descrizione di tutte le risorse"
       }
     ]
   });
