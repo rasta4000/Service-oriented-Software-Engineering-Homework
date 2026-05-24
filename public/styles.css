@@ -378,6 +378,7 @@ small { font-size: 0.8rem; color: var(--text-secondary); }
   font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em;
 }
 .result-decision.proceed { color: var(--success); }
+.result-decision.revise { color: #fb923c; }
 .result-decision.escalate { color: var(--warning); }
 .result-decision.reject { color: var(--danger); }
 
@@ -386,6 +387,7 @@ small { font-size: 0.8rem; color: var(--text-secondary); }
   font-weight: 700; font-size: 0.82rem;
 }
 .decision-badge.proceed { background: rgba(16,185,129,0.15); color: var(--success); }
+.decision-badge.revise { background: rgba(251,146,60,0.15); color: #fb923c; }
 .decision-badge.escalate { background: rgba(245,158,11,0.15); color: var(--warning); }
 .decision-badge.reject { background: rgba(239,68,68,0.15); color: var(--danger); }
 

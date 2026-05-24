@@ -222,17 +222,117 @@ function evaluateRule(rule, entity) {
 }
 
 /**
+ * Genera le azioni obbligatorie (requiredActions) in base alle violazioni rilevate.
+ * Ogni azione è specifica per la regola violata e la sua severity.
+ */
+function generateRequiredActions(violations) {
+  const actions = [];
+
+  for (const v of violations) {
+    switch (v.rule) {
+      case "ENV-01":
+        actions.push({
+          actionId: `ACT-${v.rule}`,
+          priority: "immediata",
+          action: "Attivare il contingentamento degli accessi con prenotazione obbligatoria",
+          responsible: "Ente Parco / Comune",
+          deadline: "entro 7 giorni"
+        });
+        break;
+      case "ENV-02":
+        actions.push({
+          actionId: `ACT-${v.rule}`,
+          priority: "immediata",
+          action: "Ridurre il numero di visitatori giornalieri al di sotto della capacità massima",
+          responsible: "Ente gestore del sito",
+          deadline: "entro 3 giorni"
+        });
+        break;
+      case "ENV-03":
+        actions.push({
+          actionId: `ACT-${v.rule}`,
+          priority: "alta",
+          action: "Implementare misure di mitigazione dell'impatto ambientale (percorsi obbligati, barriere naturali)",
+          responsible: "Ente Parco",
+          deadline: "entro 30 giorni"
+        });
+        break;
+      case "ENV-04":
+        actions.push({
+          actionId: `ACT-${v.rule}`,
+          priority: "alta",
+          action: "Limitare gli accessi all'area protetta e predisporre monitoraggio ambientale continuo",
+          responsible: "Ente Parco / Ministero Ambiente",
+          deadline: "entro 14 giorni"
+        });
+        break;
+      case "ENV-05":
+        actions.push({
+          actionId: `ACT-${v.rule}`,
+          priority: "media",
+          action: "Rendere obbligatoria l'informativa sui rischi del sentiero e verificare l'equipaggiamento",
+          responsible: "CAI / Comune",
+          deadline: "entro 14 giorni"
+        });
+        break;
+      case "FAIR-01":
+        actions.push({
+          actionId: `ACT-${v.rule}`,
+          priority: "alta",
+          action: "Redistribuire i flussi turistici verso siti alternativi meno frequentati della stessa area",
+          responsible: "APT Regionale",
+          deadline: "entro 30 giorni"
+        });
+        break;
+      case "FAIR-03":
+        actions.push({
+          actionId: `ACT-${v.rule}`,
+          priority: "alta",
+          action: "Predisporre un piano di accessibilità per persone con disabilità (rampe, segnaletica tattile)",
+          responsible: "Comune / Sovrintendenza",
+          deadline: "entro 90 giorni"
+        });
+        break;
+      case "PRIV-02":
+        actions.push({
+          actionId: `ACT-${v.rule}`,
+          priority: "media",
+          action: "Anonimizzare o cancellare i dati di geolocalizzazione dei visitatori entro 24 ore dalla raccolta",
+          responsible: "Responsabile DPO",
+          deadline: "immediata"
+        });
+        break;
+      default:
+        if (v.severity === "critical" || v.severity === "high") {
+          actions.push({
+            actionId: `ACT-${v.rule}`,
+            priority: v.severity === "critical" ? "immediata" : "alta",
+            action: `Risolvere la violazione della regola ${v.ruleName}`,
+            responsible: "Ente gestore",
+            deadline: v.severity === "critical" ? "entro 3 giorni" : "entro 30 giorni"
+          });
+        }
+    }
+  }
+
+  return actions;
+}
+
+/**
  * Valuta tutte le policy su una singola entità.
- * Restituisce un report con punteggio per ogni policy e un rationale.
+ * Restituisce un report strutturato con separazione tra:
+ *   - caseAnalysis: analisi tecnica dei dati (score per policy, regole, violazioni)
+ *   - governanceDecision: decisione finale (PROCEED/REVISE/ESCALATE/REJECT) con rationale e azioni
  */
 function evaluateEntity(entity, allPolicies) {
-  const report = {
+  // === FASE 1: CASE ANALYSIS (analisi tecnica oggettiva) ===
+  const caseAnalysis = {
     entityId: entity.id || entity.uri || "unknown",
     entityName: entity.nome || entity.name || "N/D",
     evaluations: {},
     overallScore: 0,
     overallCompliance: "",
-    rationale: []
+    violations: []
   };
 
   let totalWeight = 0;
@@ -262,9 +362,9 @@ function evaluateEntity(entity, allPolicies) {
       }
       ruleCount++;
 
-      // Aggiungi al rationale se violata
+      // Aggiungi alle violazioni se non superata
       if (!ruleResult.passed) {
-        report.rationale.push({
+        caseAnalysis.violations.push({
           policy: category,
           rule: rule.ruleId,
           ruleName: rule.name,
@@ -288,7 +388,7 @@ function evaluateEntity(entity, allPolicies) {
       policyResult.compliance = "NON_COMPLIANT";
     }
 
-    report.evaluations[category] = policyResult;
+    caseAnalysis.evaluations[category] = policyResult;
 
     // Contributo al punteggio complessivo (peso uguale per ogni policy)
     totalWeight++;
@@ -296,37 +396,78 @@ function evaluateEntity(entity, allPolicies) {
   }
 
   // Punteggio complessivo (media delle policy)
-  report.overallScore = totalWeight > 0
+  caseAnalysis.overallScore = totalWeight > 0
     ? Math.round(weightedScore / totalWeight)
     : 0;
 
   // Compliance complessiva
-  if (report.overallScore >= 75) {
-    report.overallCompliance = "COMPLIANT";
-  } else if (report.overallScore >= 50) {
-    report.overallCompliance = "PARTIALLY_COMPLIANT";
+  if (caseAnalysis.overallScore >= 75) {
+    caseAnalysis.overallCompliance = "COMPLIANT";
+  } else if (caseAnalysis.overallScore >= 50) {
+    caseAnalysis.overallCompliance = "PARTIALLY_COMPLIANT";
   } else {
-    report.overallCompliance = "NON_COMPLIANT";
+    caseAnalysis.overallCompliance = "NON_COMPLIANT";
   }
 
-  // Decisione etica finale (semaforo)
-  if (report.overallCompliance === "COMPLIANT") {
-    report.decision = "PROCEED";
-  } else if (report.overallCompliance === "PARTIALLY_COMPLIANT") {
-    report.decision = "ESCALATE";
+  // === FASE 2: GOVERNANCE DECISION (decisione basata sull'analisi) ===
+  const hasCritical = caseAnalysis.violations.some(v => v.severity === "critical");
+  const highCount = caseAnalysis.violations.filter(v => v.severity === "high").length;
+  const score = caseAnalysis.overallScore;
+
+  let decision, decisionRationale;
+
+  if (score >= 75 && !hasCritical) {
+    decision = "PROCEED";
+    decisionRationale = "L'entità soddisfa tutte le policy etiche. Nessun intervento necessario.";
+  } else if (score >= 50 && !hasCritical) {
+    decision = "REVISE";
+    decisionRationale = "L'entità presenta violazioni non critiche. È possibile procedere dopo aver implementato le azioni correttive indicate.";
+  } else if (score >= 30 || (hasCritical && highCount <= 2)) {
+    decision = "ESCALATE";
+    decisionRationale = "L'entità presenta violazioni significative che richiedono l'intervento di un responsabile di livello superiore prima di autorizzare l'operazione.";
   } else {
-    report.decision = "REJECT";
+    decision = "REJECT";
+    decisionRationale = "L'entità non soddisfa i requisiti minimi etici. L'operazione non può essere autorizzata nello stato attuale.";
   }
 
-  // Aggiungi un rationale positivo se non ci sono violazioni
-  if (report.rationale.length === 0) {
-    report.rationale.push({
-      policy: "all",
-      message: "L'entità soddisfa tutte le policy etiche definite. Nessuna violazione rilevata."
-    });
-  }
+  // Genera le azioni obbligatorie
+  const requiredActions = generateRequiredActions(caseAnalysis.violations);
 
-  return report;
+  // Costruisci il rationale leggibile
+  const rationale = caseAnalysis.violations.length > 0
+    ? caseAnalysis.violations.map(v => ({
+        policy: v.policy,
+        rule: v.rule,
+        ruleName: v.ruleName,
+        severity: v.severity,
+        message: v.message,
+        details: v.details
+      }))
+    : [{ policy: "all", message: "L'entità soddisfa tutte le policy etiche definite. Nessuna violazione rilevata." }];
+
+  const governanceDecision = {
+    decision,
+    decisionRationale,
+    requiredActions,
+    policiesApplied: Object.keys(caseAnalysis.evaluations),
+    timestamp: new Date().toISOString()
+  };
+
+  // === REPORT FINALE (retrocompatibile) ===
+  return {
+    // Campi retrocompatibili per il frontend esistente
+    entityId: caseAnalysis.entityId,
+    entityName: caseAnalysis.entityName,
+    overallScore: caseAnalysis.overallScore,
+    overallCompliance: caseAnalysis.overallCompliance,
+    decision,
+    requiredActions,
+    rationale,
+    evaluations: caseAnalysis.evaluations,
+    // Struttura separata case analysis / governance decision
+    caseAnalysis,
+    governanceDecision
+  };
 }
 
 // ---------- Helper: chiamata al DaaS ----------

@@ -131,5 +131,433 @@
         }
       }
     ]
+  },
+  {
+    "requestId": "REQ-1779633199000",
+    "timestamp": "2026-05-24T14:33:18.885Z",
+    "requestedBy": "test",
+    "action": "EVALUATE_SITE",
+    "entityId": "CattedraleSanBerardo",
+    "entityName": "Cattedrale di San Berardo – Teramo",
+    "overallScore": 100,
+    "overallCompliance": "COMPLIANT",
+    "decision": "PROCEED",
+    "violationsCount": 0,
+    "policiesApplied": [
+      "environmental_risk",
+      "fairness",
+      "privacy"
+    ],
+    "rationale": [
+      {
+        "policy": "all",
+        "message": "L'entità soddisfa tutte le policy etiche definite. Nessuna violazione rilevata."
+      }
+    ]
+  },
+  {
+    "requestId": "REQ-1779633208452",
+    "timestamp": "2026-05-24T14:33:28.444Z",
+    "requestedBy": "test",
+    "action": "EVALUATE_SITE",
+    "entityId": "CattedraleSanBerardo",
+    "entityName": "Cattedrale di San Berardo – Teramo",
+    "overallScore": 100,
+    "overallCompliance": "COMPLIANT",
+    "decision": "PROCEED",
+    "violationsCount": 0,
+    "policiesApplied": [
+      "environmental_risk",
+      "fairness",
+      "privacy"
+    ],
+    "rationale": [
+      {
+        "policy": "all",
+        "message": "L'entità soddisfa tutte le policy etiche definite. Nessuna violazione rilevata."
+      }
+    ]
+  },
+  {
+    "requestId": "REQ-1779633219921",
+    "timestamp": "2026-05-24T14:33:39.912Z",
+    "requestedBy": "test",
+    "action": "EVALUATE_SITE",
+    "entityId": "RoccaCalascio",
+    "entityName": "Rocca di Calascio",
+    "overallScore": 33,
+    "overallCompliance": "NON_COMPLIANT",
+    "decision": "ESCALATE",
+    "violationsCount": 8,
+    "policiesApplied": [
+      "environmental_risk",
+      "fairness",
+      "privacy"
+    ],
+    "rationale": [
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-01",
+        "ruleName": "Sovraffollamento critico",
+        "severity": "critical",
+        "message": "ATTENZIONE: il sito presenta un livello di sovraffollamento pericoloso. Rischio per la sicurezza dei visitatori e per la conservazione del sito.",
+        "details": {
+          "value": "critico",
+          "matchedIn": [
+            "alto",
+            "critico"
+          ]
+        }
+      },
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-02",
+        "ruleName": "Superamento capacità di carico",
+        "severity": "critical",
+        "message": "I visitatori giornalieri superano la capacità massima del sito. Impatto ambientale e rischio sanitario elevato. Necessario contingentamento immediato.",
+        "details": {
+          "visitatori": 600,
+          "capacita": 500,
+          "ratio": "1.20"
+        }
+      },
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-03",
+        "ruleName": "Impatto su ecosistema sensibile",
+        "severity": "high",
+        "message": "Il sito si trova in un ecosistema ad alta sensibilità ambientale. L'impatto del turismo deve essere attentamente monitorato e mitigato.",
+        "details": {
+          "value": "alta",
+          "matchedIn": [
+            "alta",
+            "protetta"
+          ]
+        }
+      },
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-04",
+        "ruleName": "Combinazione rischio-area protetta",
+        "severity": "high",
+        "message": "Area protetta con rischio sovraffollamento: l'integrità dell'ecosistema è a rischio. Intervenire con politiche di accesso limitato.",
+        "details": {
+          "areaProtetta": "true",
+          "rischioSovraffollamento": "critico"
+        }
+      },
+      {
+        "policy": "fairness",
+        "rule": "FAIR-01",
+        "ruleName": "Concentrazione flussi turistici",
+        "severity": "high",
+        "message": "Il sito riceve un flusso turistico sproporzionato rispetto alla capacità. Consigliare redistribuzione verso siti alternativi meno frequentati.",
+        "details": {
+          "value": 600,
+          "relatedValue": 500,
+          "ratio": "1.20"
+        }
+      },
+      {
+        "policy": "fairness",
+        "rule": "FAIR-03",
+        "ruleName": "Accessibilità universale",
+        "severity": "high",
+        "message": "Il sito non è accessibile a persone con disabilità. Questo viola il principio di equità nell'accesso al patrimonio culturale e naturale.",
+        "details": {
+          "value": "assente"
+        }
+      },
+      {
+        "policy": "privacy",
+        "rule": "PRIV-02",
+        "ruleName": "Protezione dati geolocalizzazione",
+        "severity": "medium",
+        "message": "Il sito è in area protetta: i dati di geolocalizzazione dei visitatori devono essere anonimizzati o cancellati entro 24 ore.",
+        "details": {
+          "value": "true"
+        }
+      },
+      {
+        "policy": "privacy",
+        "rule": "PRIV-03",
+        "ruleName": "Minimizzazione dati accessibilità",
+        "severity": "low",
+        "message": "Il sito ha accessibilità limitata: garantire che le segnalazioni di necessità speciali non vengano associate a profili individuali dei visitatori.",
+        "details": {
+          "value": "assente"
+        }
+      }
+    ]
+  },
+  {
+    "requestId": "REQ-1779633252192",
+    "timestamp": "2026-05-24T14:34:12.181Z",
+    "requestedBy": "dashboard-quick",
+    "action": "EVALUATE_SITE",
+    "entityId": "RoccaCalascio",
+    "entityName": "Rocca di Calascio",
+    "overallScore": 33,
+    "overallCompliance": "NON_COMPLIANT",
+    "decision": "ESCALATE",
+    "violationsCount": 8,
+    "policiesApplied": [
+      "environmental_risk",
+      "fairness",
+      "privacy"
+    ],
+    "rationale": [
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-01",
+        "ruleName": "Sovraffollamento critico",
+        "severity": "critical",
+        "message": "ATTENZIONE: il sito presenta un livello di sovraffollamento pericoloso. Rischio per la sicurezza dei visitatori e per la conservazione del sito.",
+        "details": {
+          "value": "critico",
+          "matchedIn": [
+            "alto",
+            "critico"
+          ]
+        }
+      },
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-02",
+        "ruleName": "Superamento capacità di carico",
+        "severity": "critical",
+        "message": "I visitatori giornalieri superano la capacità massima del sito. Impatto ambientale e rischio sanitario elevato. Necessario contingentamento immediato.",
+        "details": {
+          "visitatori": 600,
+          "capacita": 500,
+          "ratio": "1.20"
+        }
+      },
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-03",
+        "ruleName": "Impatto su ecosistema sensibile",
+        "severity": "high",
+        "message": "Il sito si trova in un ecosistema ad alta sensibilità ambientale. L'impatto del turismo deve essere attentamente monitorato e mitigato.",
+        "details": {
+          "value": "alta",
+          "matchedIn": [
+            "alta",
+            "protetta"
+          ]
+        }
+      },
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-04",
+        "ruleName": "Combinazione rischio-area protetta",
+        "severity": "high",
+        "message": "Area protetta con rischio sovraffollamento: l'integrità dell'ecosistema è a rischio. Intervenire con politiche di accesso limitato.",
+        "details": {
+          "areaProtetta": "true",
+          "rischioSovraffollamento": "critico"
+        }
+      },
+      {
+        "policy": "fairness",
+        "rule": "FAIR-01",
+        "ruleName": "Concentrazione flussi turistici",
+        "severity": "high",
+        "message": "Il sito riceve un flusso turistico sproporzionato rispetto alla capacità. Consigliare redistribuzione verso siti alternativi meno frequentati.",
+        "details": {
+          "value": 600,
+          "relatedValue": 500,
+          "ratio": "1.20"
+        }
+      },
+      {
+        "policy": "fairness",
+        "rule": "FAIR-03",
+        "ruleName": "Accessibilità universale",
+        "severity": "high",
+        "message": "Il sito non è accessibile a persone con disabilità. Questo viola il principio di equità nell'accesso al patrimonio culturale e naturale.",
+        "details": {
+          "value": "assente"
+        }
+      },
+      {
+        "policy": "privacy",
+        "rule": "PRIV-02",
+        "ruleName": "Protezione dati geolocalizzazione",
+        "severity": "medium",
+        "message": "Il sito è in area protetta: i dati di geolocalizzazione dei visitatori devono essere anonimizzati o cancellati entro 24 ore.",
+        "details": {
+          "value": "true"
+        }
+      },
+      {
+        "policy": "privacy",
+        "rule": "PRIV-03",
+        "ruleName": "Minimizzazione dati accessibilità",
+        "severity": "low",
+        "message": "Il sito ha accessibilità limitata: garantire che le segnalazioni di necessità speciali non vengano associate a profili individuali dei visitatori.",
+        "details": {
+          "value": "assente"
+        }
+      }
+    ]
+  },
+  {
+    "requestId": "REQ-1779633281988",
+    "timestamp": "2026-05-24T14:34:41.981Z",
+    "requestedBy": "scenario-test-proceed",
+    "action": "EVALUATE_SITE",
+    "entityId": "CattedraleSanBerardo",
+    "entityName": "Cattedrale di San Berardo – Teramo",
+    "overallScore": 100,
+    "overallCompliance": "COMPLIANT",
+    "decision": "PROCEED",
+    "violationsCount": 0,
+    "policiesApplied": [
+      "environmental_risk",
+      "fairness",
+      "privacy"
+    ],
+    "rationale": [
+      {
+        "policy": "all",
+        "message": "L'entità soddisfa tutte le policy etiche definite. Nessuna violazione rilevata."
+      }
+    ]
+  },
+  {
+    "requestId": "REQ-1779633308067",
+    "timestamp": "2026-05-24T14:35:08.061Z",
+    "requestedBy": "scenario-test-reject",
+    "action": "EVALUATE_SITE",
+    "entityId": "RoccaCalascio",
+    "entityName": "Rocca di Calascio",
+    "overallScore": 33,
+    "overallCompliance": "NON_COMPLIANT",
+    "decision": "ESCALATE",
+    "violationsCount": 8,
+    "policiesApplied": [
+      "environmental_risk",
+      "fairness",
+      "privacy"
+    ],
+    "rationale": [
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-01",
+        "ruleName": "Sovraffollamento critico",
+        "severity": "critical",
+        "message": "ATTENZIONE: il sito presenta un livello di sovraffollamento pericoloso. Rischio per la sicurezza dei visitatori e per la conservazione del sito.",
+        "details": {
+          "value": "critico",
+          "matchedIn": [
+            "alto",
+            "critico"
+          ]
+        }
+      },
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-02",
+        "ruleName": "Superamento capacità di carico",
+        "severity": "critical",
+        "message": "I visitatori giornalieri superano la capacità massima del sito. Impatto ambientale e rischio sanitario elevato. Necessario contingentamento immediato.",
+        "details": {
+          "visitatori": 600,
+          "capacita": 500,
+          "ratio": "1.20"
+        }
+      },
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-03",
+        "ruleName": "Impatto su ecosistema sensibile",
+        "severity": "high",
+        "message": "Il sito si trova in un ecosistema ad alta sensibilità ambientale. L'impatto del turismo deve essere attentamente monitorato e mitigato.",
+        "details": {
+          "value": "alta",
+          "matchedIn": [
+            "alta",
+            "protetta"
+          ]
+        }
+      },
+      {
+        "policy": "environmental_risk",
+        "rule": "ENV-04",
+        "ruleName": "Combinazione rischio-area protetta",
+        "severity": "high",
+        "message": "Area protetta con rischio sovraffollamento: l'integrità dell'ecosistema è a rischio. Intervenire con politiche di accesso limitato.",
+        "details": {
+          "areaProtetta": "true",
+          "rischioSovraffollamento": "critico"
+        }
+      },
+      {
+        "policy": "fairness",
+        "rule": "FAIR-01",
+        "ruleName": "Concentrazione flussi turistici",
+        "severity": "high",
+        "message": "Il sito riceve un flusso turistico sproporzionato rispetto alla capacità. Consigliare redistribuzione verso siti alternativi meno frequentati.",
+        "details": {
+          "value": 600,
+          "relatedValue": 500,
+          "ratio": "1.20"
+        }
+      },
+      {
+        "policy": "fairness",
+        "rule": "FAIR-03",
+        "ruleName": "Accessibilità universale",
+        "severity": "high",
+        "message": "Il sito non è accessibile a persone con disabilità. Questo viola il principio di equità nell'accesso al patrimonio culturale e naturale.",
+        "details": {
+          "value": "assente"
+        }
+      },
+      {
+        "policy": "privacy",
+        "rule": "PRIV-02",
+        "ruleName": "Protezione dati geolocalizzazione",
+        "severity": "medium",
+        "message": "Il sito è in area protetta: i dati di geolocalizzazione dei visitatori devono essere anonimizzati o cancellati entro 24 ore.",
+        "details": {
+          "value": "true"
+        }
+      },
+      {
+        "policy": "privacy",
+        "rule": "PRIV-03",
+        "ruleName": "Minimizzazione dati accessibilità",
+        "severity": "low",
+        "message": "Il sito ha accessibilità limitata: garantire che le segnalazioni di necessità speciali non vengano associate a profili individuali dei visitatori.",
+        "details": {
+          "value": "assente"
+        }
+      }
+    ]
+  },
+  {
+    "requestId": "REQ-1779633379883",
+    "timestamp": "2026-05-24T14:36:19.877Z",
+    "requestedBy": "scenario-test-proceed",
+    "action": "EVALUATE_SITE",
+    "entityId": "CattedraleSanBerardo",
+    "entityName": "Cattedrale di San Berardo – Teramo",
+    "overallScore": 100,
+    "overallCompliance": "COMPLIANT",
+    "decision": "PROCEED",
+    "violationsCount": 0,
+    "policiesApplied": [
+      "environmental_risk",
+      "fairness",
+      "privacy"
+    ],
+    "rationale": [
+      {
+        "policy": "all",
+        "message": "L'entità soddisfa tutte le policy etiche definite. Nessuna violazione rilevata."
+      }
+    ]
   }
 ]

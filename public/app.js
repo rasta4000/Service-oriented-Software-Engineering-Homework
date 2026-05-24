@@ -110,8 +110,8 @@ window.runQuickScenario = runQuickScenario;
 function renderCompactResult(result) {
   const ev = result.evaluation;
   const dec = ev.decision;
-  const cls = dec === "PROCEED" ? "proceed" : dec === "ESCALATE" ? "escalate" : "reject";
-  const icon = dec === "PROCEED" ? "✅" : dec === "ESCALATE" ? "⚠️" : "🛑";
+  const cls = dec === "PROCEED" ? "proceed" : dec === "REVISE" ? "revise" : dec === "ESCALATE" ? "escalate" : "reject";
+  const icon = dec === "PROCEED" ? "✅" : dec === "REVISE" ? "🔄" : dec === "ESCALATE" ? "⚠️" : "🛑";
 
   return `
     <div class="result-header">
@@ -338,8 +338,8 @@ window.runScenario = runScenario;
 function renderFullResult(result) {
   const ev = result.evaluation;
   const dec = ev.decision;
-  const cls = dec === "PROCEED" ? "proceed" : dec === "ESCALATE" ? "escalate" : "reject";
-  const icon = dec === "PROCEED" ? "✅" : dec === "ESCALATE" ? "⚠️" : "🛑";
+  const cls = dec === "PROCEED" ? "proceed" : dec === "REVISE" ? "revise" : dec === "ESCALATE" ? "escalate" : "reject";
+  const icon = dec === "PROCEED" ? "✅" : dec === "REVISE" ? "🔄" : dec === "ESCALATE" ? "⚠️" : "🛑";
   const scoreColor = ev.overallScore >= 75 ? "var(--success)" : ev.overallScore >= 50 ? "var(--warning)" : "var(--danger)";
 
   // Score ring SVG
@@ -369,8 +369,18 @@ function renderFullResult(result) {
     </div>
   `;
 
-  // Policy breakdown
-  html += `<h3 style="font-size:0.95rem;margin-bottom:0.75rem;">Dettaglio per Policy</h3>`;
+  // Governance Decision rationale
+  if (ev.governanceDecision) {
+    html += `
+      <div class="governance-block glass-card" style="margin:1rem 0;padding:1rem;border-left:3px solid ${scoreColor};">
+        <h3 style="font-size:0.95rem;margin-bottom:0.5rem;">🏛️ Governance Decision</h3>
+        <p style="color:var(--text-secondary);font-size:0.88rem;margin:0;">${ev.governanceDecision.decisionRationale}</p>
+      </div>
+    `;
+  }
+
+  // Policy breakdown (Case Analysis)
+  html += `<h3 style="font-size:0.95rem;margin-bottom:0.75rem;">📊 Case Analysis — Dettaglio per Policy</h3>`;
   html += `<div class="policy-grid">`;
   for (const [cat, pol] of Object.entries(ev.evaluations)) {
     const polColor = pol.score >= 75 ? "var(--success)" : pol.score >= 50 ? "var(--warning)" : "var(--danger)";
@@ -413,6 +423,27 @@ function renderFullResult(result) {
     `;
   }
   html += `</div>`;
+
+  // Required Actions
+  if (ev.requiredActions && ev.requiredActions.length > 0) {
+    html += `<h3 style="font-size:0.95rem;margin:1rem 0 0.5rem;">📋 Azioni Obbligatorie</h3>`;
+    html += `<div class="actions-list">`;
+    for (const a of ev.requiredActions) {
+      const prioColor = a.priority === "immediata" ? "var(--danger)" : a.priority === "alta" ? "var(--warning)" : "var(--text-secondary)";
+      html += `
+        <div class="action-item" style="border-left:3px solid ${prioColor};padding:0.75rem 1rem;margin-bottom:0.5rem;background:rgba(255,255,255,0.02);border-radius:0 8px 8px 0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">
+            <strong style="font-size:0.88rem;">${a.action}</strong>
+            <span class="badge" style="background:${prioColor};color:#fff;font-size:0.7rem;">${a.priority.toUpperCase()}</span>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text-muted);">
+            Responsabile: ${a.responsible} | Scadenza: ${a.deadline}
+          </div>
+        </div>
+      `;
+    }
+    html += `</div>`;
+  }
 
   return html;
 }
@@ -474,7 +505,7 @@ window.loadAudit = loadAudit;
 
 function createTrafficLight(decision) {
   const g = decision === "PROCEED" ? "active-green" : "";
-  const y = decision === "ESCALATE" ? "active-yellow" : "";
+  const y = (decision === "ESCALATE" || decision === "REVISE") ? "active-yellow" : "";
   const r = decision === "REJECT" ? "active-red" : "";
   return `
     <div class="traffic-light">
