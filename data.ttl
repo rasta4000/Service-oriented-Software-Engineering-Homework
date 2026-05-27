@@ -1,0 +1,425 @@
+@prefix ex:    <http://example.org/tourism#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix geo:   <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+
+# ==============================================================================
+# ONTOLOGIA – Classi
+# ==============================================================================
+
+ex:PointOfInterest  a owl:Class ;
+    rdfs:label "Punto di interesse turistico"@it .
+
+ex:NaturalSite  a owl:Class ;
+    rdfs:subClassOf ex:PointOfInterest ;
+    rdfs:label "Sito naturale"@it .
+
+ex:HistoricalSite  a owl:Class ;
+    rdfs:subClassOf ex:PointOfInterest ;
+    rdfs:label "Sito storico-culturale"@it .
+
+ex:HikingTrail  a owl:Class ;
+    rdfs:label "Percorso escursionistico"@it .
+
+ex:LocalEvent  a owl:Class ;
+    rdfs:label "Evento locale"@it .
+
+ex:LocalProducer  a owl:Class ;
+    rdfs:label "Produttore / operatore commerciale locale"@it .
+
+# ==============================================================================
+# ONTOLOGIA – Proprietà (Object Properties)
+# ==============================================================================
+
+ex:locatedIn  a owl:ObjectProperty ;
+    rdfs:label "situato in provincia di"@it ;
+    rdfs:domain ex:PointOfInterest ;
+    rdfs:range  xsd:string .
+
+ex:passesThrough  a owl:ObjectProperty ;
+    rdfs:label "attraversa il punto di interesse"@it ;
+    rdfs:domain ex:HikingTrail ;
+    rdfs:range  ex:PointOfInterest .
+
+ex:producerNear  a owl:ObjectProperty ;
+    rdfs:label "produttore vicino al punto di interesse"@it ;
+    rdfs:domain ex:LocalProducer ;
+    rdfs:range  ex:PointOfInterest .
+
+ex:eventLocation  a owl:ObjectProperty ;
+    rdfs:label "luogo dell'evento"@it ;
+    rdfs:domain ex:LocalEvent ;
+    rdfs:range  ex:PointOfInterest .
+
+# ==============================================================================
+# ONTOLOGIA – Proprietà (Datatype Properties)
+# ==============================================================================
+
+ex:nome  a owl:DatatypeProperty ;
+    rdfs:label "nome"@it ;
+    rdfs:range xsd:string .
+
+ex:descrizione  a owl:DatatypeProperty ;
+    rdfs:label "descrizione"@it ;
+    rdfs:range xsd:string .
+
+ex:provincia  a owl:DatatypeProperty ;
+    rdfs:label "provincia"@it ;
+    rdfs:range xsd:string .
+
+ex:comune  a owl:DatatypeProperty ;
+    rdfs:label "comune"@it ;
+    rdfs:range xsd:string .
+
+# --- Proprietà rilevanti per EaaS ---
+
+ex:rischioSovraffollamento  a owl:DatatypeProperty ;
+    rdfs:label "livello di rischio sovraffollamento (overtourism)"@it ;
+    rdfs:comment "Valori: basso, medio, alto, critico"@it ;
+    rdfs:range xsd:string .
+
+ex:capacitaMassima  a owl:DatatypeProperty ;
+    rdfs:label "capacità massima giornaliera di visitatori"@it ;
+    rdfs:range xsd:integer .
+
+ex:accessibilitaDisabili  a owl:DatatypeProperty ;
+    rdfs:label "livello di accessibilità per utenti con disabilità"@it ;
+    rdfs:comment "Valori: completa, parziale, assente"@it ;
+    rdfs:range xsd:string .
+
+ex:sensibilitaAmbientale  a owl:DatatypeProperty ;
+    rdfs:label "sensibilità ambientale del sito"@it ;
+    rdfs:comment "Valori: bassa, media, alta, protetta"@it ;
+    rdfs:range xsd:string .
+
+ex:areaProtetta  a owl:DatatypeProperty ;
+    rdfs:label "il sito è dentro un'area protetta"@it ;
+    rdfs:range xsd:boolean .
+
+ex:dimensioneOperatore  a owl:DatatypeProperty ;
+    rdfs:label "dimensione dell'operatore commerciale"@it ;
+    rdfs:comment "Valori: micro, piccolo, medio, grande"@it ;
+    rdfs:range xsd:string .
+
+ex:categoriaCommerciale  a owl:DatatypeProperty ;
+    rdfs:label "categoria commerciale del produttore"@it ;
+    rdfs:range xsd:string .
+
+ex:difficolta  a owl:DatatypeProperty ;
+    rdfs:label "difficoltà del percorso"@it ;
+    rdfs:comment "Scala CAI: T, E, EE, EEA"@it ;
+    rdfs:range xsd:string .
+
+ex:lunghezzaKm  a owl:DatatypeProperty ;
+    rdfs:label "lunghezza in km"@it ;
+    rdfs:range xsd:decimal .
+
+ex:dislivelloM  a owl:DatatypeProperty ;
+    rdfs:label "dislivello in metri"@it ;
+    rdfs:range xsd:integer .
+
+ex:dataInizio  a owl:DatatypeProperty ;
+    rdfs:label "data inizio evento"@it ;
+    rdfs:range xsd:date .
+
+ex:dataFine  a owl:DatatypeProperty ;
+    rdfs:label "data fine evento"@it ;
+    rdfs:range xsd:date .
+
+ex:annoFondazione  a owl:DatatypeProperty ;
+    rdfs:label "anno di fondazione o costruzione"@it ;
+    rdfs:range xsd:gYear .
+
+ex:visitatoriMediGiornalieri  a owl:DatatypeProperty ;
+    rdfs:label "numero medio di visitatori giornalieri"@it ;
+    rdfs:range xsd:integer .
+
+# ==============================================================================
+# ISTANZE – Siti Naturali
+# ==============================================================================
+
+ex:GranSasso  a ex:NaturalSite ;
+    ex:nome            "Parco Nazionale del Gran Sasso e Monti della Laga"@it ;
+    ex:descrizione     "Il più grande parco d'Abruzzo, con il Corno Grande (2912 m), ghiacciai e valli spettacolari."@it ;
+    ex:provincia       "L'Aquila" ;
+    ex:comune          "Assergi" ;
+    geo:lat            "42.4692"^^xsd:decimal ;
+    geo:long           "13.5656"^^xsd:decimal ;
+    ex:rischioSovraffollamento  "alto" ;
+    ex:capacitaMassima          3000 ;
+    ex:accessibilitaDisabili    "parziale" ;
+    ex:sensibilitaAmbientale    "protetta" ;
+    ex:areaProtetta             true ;
+    ex:visitatoriMediGiornalieri 2800 .
+
+ex:LagoScanno  a ex:NaturalSite ;
+    ex:nome            "Lago di Scanno"@it ;
+    ex:descrizione     "Lago naturale a forma di cuore, circondato da montagne, ideale per passeggiate e canoa."@it ;
+    ex:provincia       "L'Aquila" ;
+    ex:comune          "Scanno" ;
+    geo:lat            "41.9260"^^xsd:decimal ;
+    geo:long           "13.8730"^^xsd:decimal ;
+    ex:rischioSovraffollamento  "medio" ;
+    ex:capacitaMassima          1500 ;
+    ex:accessibilitaDisabili    "parziale" ;
+    ex:sensibilitaAmbientale    "alta" ;
+    ex:areaProtetta             false ;
+    ex:visitatoriMediGiornalieri 900 .
+
+ex:CostaDeiTrabocchi  a ex:NaturalSite ;
+    ex:nome            "Costa dei Trabocchi"@it ;
+    ex:descrizione     "Tratto di costa adriatica con antiche macchine da pesca su palafitta, pista ciclabile e spiagge."@it ;
+    ex:provincia       "Chieti" ;
+    ex:comune          "San Vito Chietino" ;
+    geo:lat            "42.3016"^^xsd:decimal ;
+    geo:long           "14.4521"^^xsd:decimal ;
+    ex:rischioSovraffollamento  "alto" ;
+    ex:capacitaMassima          5000 ;
+    ex:accessibilitaDisabili    "completa" ;
+    ex:sensibilitaAmbientale    "media" ;
+    ex:areaProtetta             false ;
+    ex:visitatoriMediGiornalieri 4200 .
+
+ex:RiservaDaniele  a ex:NaturalSite ;
+    ex:nome            "Riserva Naturale Regionale Lecceta di Torino di Sangro"@it ;
+    ex:descrizione     "Riserva costiera con boschi di leccio, dune e zona umida retrodunale."@it ;
+    ex:provincia       "Chieti" ;
+    ex:comune          "Torino di Sangro" ;
+    geo:lat            "42.2154"^^xsd:decimal ;
+    geo:long           "14.5282"^^xsd:decimal ;
+    ex:rischioSovraffollamento  "basso" ;
+    ex:capacitaMassima          400 ;
+    ex:accessibilitaDisabili    "assente" ;
+    ex:sensibilitaAmbientale    "protetta" ;
+    ex:areaProtetta             true ;
+    ex:visitatoriMediGiornalieri 120 .
+
+# ==============================================================================
+# ISTANZE – Siti Storico-Culturali
+# ==============================================================================
+
+ex:RoccaCalascio  a ex:HistoricalSite ;
+    ex:nome            "Rocca di Calascio"@it ;
+    ex:descrizione     "Fortezza medievale a 1460 m, tra le più alte d'Italia, set del film Ladyhawke."@it ;
+    ex:provincia       "L'Aquila" ;
+    ex:comune          "Calascio" ;
+    geo:lat            "42.3273"^^xsd:decimal ;
+    geo:long           "13.6918"^^xsd:decimal ;
+    ex:annoFondazione  "1480"^^xsd:gYear ;
+    ex:rischioSovraffollamento  "critico" ;
+    ex:capacitaMassima          500 ;
+    ex:accessibilitaDisabili    "assente" ;
+    ex:sensibilitaAmbientale    "alta" ;
+    ex:areaProtetta             true ;
+    ex:visitatoriMediGiornalieri 600 .
+
+ex:SanClementeACasauria  a ex:HistoricalSite ;
+    ex:nome            "Abbazia di San Clemente a Casauria"@it ;
+    ex:descrizione     "Abbazia benedettina del IX secolo con portale romanico e cripta."@it ;
+    ex:provincia       "Pescara" ;
+    ex:comune          "Castiglione a Casauria" ;
+    geo:lat            "42.2140"^^xsd:decimal ;
+    geo:long           "13.8850"^^xsd:decimal ;
+    ex:annoFondazione  "871"^^xsd:gYear ;
+    ex:rischioSovraffollamento  "basso" ;
+    ex:capacitaMassima          300 ;
+    ex:accessibilitaDisabili    "parziale" ;
+    ex:sensibilitaAmbientale    "media" ;
+    ex:areaProtetta             false ;
+    ex:visitatoriMediGiornalieri 80 .
+
+ex:SantoStefanoSessanio  a ex:HistoricalSite ;
+    ex:nome            "Borgo di Santo Stefano di Sessanio"@it ;
+    ex:descrizione     "Borgo medievale fortificato nel Parco del Gran Sasso, esempio di albergo diffuso."@it ;
+    ex:provincia       "L'Aquila" ;
+    ex:comune          "Santo Stefano di Sessanio" ;
+    geo:lat            "42.3436"^^xsd:decimal ;
+    geo:long           "13.6454"^^xsd:decimal ;
+    ex:annoFondazione  "1100"^^xsd:gYear ;
+    ex:rischioSovraffollamento  "medio" ;
+    ex:capacitaMassima          800 ;
+    ex:accessibilitaDisabili    "parziale" ;
+    ex:sensibilitaAmbientale    "alta" ;
+    ex:areaProtetta             true ;
+    ex:visitatoriMediGiornalieri 450 .
+
+ex:CattedraleSanBerardo  a ex:HistoricalSite ;
+    ex:nome            "Cattedrale di San Berardo – Teramo"@it ;
+    ex:descrizione     "Duomo romanico-gotico del XII secolo nel centro storico di Teramo."@it ;
+    ex:provincia       "Teramo" ;
+    ex:comune          "Teramo" ;
+    geo:lat            "42.6589"^^xsd:decimal ;
+    geo:long           "13.7045"^^xsd:decimal ;
+    ex:annoFondazione  "1158"^^xsd:gYear ;
+    ex:rischioSovraffollamento  "basso" ;
+    ex:capacitaMassima          400 ;
+    ex:accessibilitaDisabili    "completa" ;
+    ex:sensibilitaAmbientale    "bassa" ;
+    ex:areaProtetta             false ;
+    ex:visitatoriMediGiornalieri 150 .
+
+# ==============================================================================
+# ISTANZE – Percorsi Escursionistici
+# ==============================================================================
+
+ex:SentieroDelloSpirito  a ex:HikingTrail ;
+    ex:nome            "Sentiero dello Spirito – Maiella"@it ;
+    ex:descrizione     "Spettacolare sentiero panoramico scavato nella roccia sulla Maiella orientale."@it ;
+    ex:provincia       "Chieti" ;
+    ex:comune          "Fara San Martino" ;
+    ex:lunghezzaKm     12.5 ;
+    ex:dislivelloM     850 ;
+    ex:difficolta      "EE" ;
+    ex:rischioSovraffollamento  "medio" ;
+    ex:capacitaMassima          200 ;
+    ex:accessibilitaDisabili    "assente" ;
+    ex:sensibilitaAmbientale    "protetta" ;
+    ex:areaProtetta             true ;
+    ex:passesThrough            ex:GranSasso .
+
+ex:SentieroDellaLiberta  a ex:HikingTrail ;
+    ex:nome            "Sentiero della Libertà"@it ;
+    ex:descrizione     "Percorso storico della Seconda Guerra Mondiale dal versante aquilano a Casoli."@it ;
+    ex:provincia       "L'Aquila" ;
+    ex:comune          "Sulmona" ;
+    ex:lunghezzaKm     60.0 ;
+    ex:dislivelloM     2200 ;
+    ex:difficolta      "E" ;
+    ex:rischioSovraffollamento  "basso" ;
+    ex:capacitaMassima          150 ;
+    ex:accessibilitaDisabili    "assente" ;
+    ex:sensibilitaAmbientale    "alta" ;
+    ex:areaProtetta             true ;
+    ex:passesThrough            ex:GranSasso .
+
+ex:AnelloCampoImperatore  a ex:HikingTrail ;
+    ex:nome            "Anello di Campo Imperatore"@it ;
+    ex:descrizione     "Trekking ad anello sull'altopiano più grande d'Italia, il 'Piccolo Tibet'."@it ;
+    ex:provincia       "L'Aquila" ;
+    ex:comune          "Castel del Monte" ;
+    ex:lunghezzaKm     18.0 ;
+    ex:dislivelloM     600 ;
+    ex:difficolta      "E" ;
+    ex:rischioSovraffollamento  "alto" ;
+    ex:capacitaMassima          400 ;
+    ex:accessibilitaDisabili    "assente" ;
+    ex:sensibilitaAmbientale    "protetta" ;
+    ex:areaProtetta             true ;
+    ex:passesThrough            ex:GranSasso .
+
+ex:CiclabileTrabocchi  a ex:HikingTrail ;
+    ex:nome            "Via Verde della Costa dei Trabocchi"@it ;
+    ex:descrizione     "Pista ciclabile e pedonale lungo la costa adriatica su un vecchio tracciato ferroviario."@it ;
+    ex:provincia       "Chieti" ;
+    ex:comune          "Ortona" ;
+    ex:lunghezzaKm     42.0 ;
+    ex:dislivelloM     50 ;
+    ex:difficolta      "T" ;
+    ex:rischioSovraffollamento  "alto" ;
+    ex:capacitaMassima          3000 ;
+    ex:accessibilitaDisabili    "completa" ;
+    ex:sensibilitaAmbientale    "media" ;
+    ex:areaProtetta             false ;
+    ex:passesThrough            ex:CostaDeiTrabocchi .
+
+# ==============================================================================
+# ISTANZE – Eventi Locali
+# ==============================================================================
+
+ex:GiostraCavalleresca  a ex:LocalEvent ;
+    ex:nome            "Giostra Cavalleresca di Sulmona"@it ;
+    ex:descrizione     "Rievocazione storica medievale con gara equestre tra i borghi della città."@it ;
+    ex:provincia       "L'Aquila" ;
+    ex:comune          "Sulmona" ;
+    ex:dataInizio      "2026-07-25"^^xsd:date ;
+    ex:dataFine        "2026-07-27"^^xsd:date ;
+    ex:rischioSovraffollamento  "medio" ;
+    ex:capacitaMassima          5000 ;
+    ex:accessibilitaDisabili    "parziale" ;
+    ex:eventLocation            ex:SanClementeACasauria .
+
+ex:FestaDellUva  a ex:LocalEvent ;
+    ex:nome            "Festa dell'Uva – Torano Nuovo"@it ;
+    ex:descrizione     "Sagra enogastronomica dedicata alla vendemmia e ai vini abruzzesi, con sfilate e degustazioni."@it ;
+    ex:provincia       "Teramo" ;
+    ex:comune          "Torano Nuovo" ;
+    ex:dataInizio      "2026-09-26"^^xsd:date ;
+    ex:dataFine        "2026-09-28"^^xsd:date ;
+    ex:rischioSovraffollamento  "basso" ;
+    ex:capacitaMassima          3000 ;
+    ex:accessibilitaDisabili    "parziale" ;
+    ex:eventLocation            ex:CattedraleSanBerardo .
+
+ex:FestivalMaiella  a ex:LocalEvent ;
+    ex:nome            "Festival del Camminare – Parco Maiella"@it ;
+    ex:descrizione     "Settimana di trekking guidato, workshop naturalistici e laboratori di educazione ambientale."@it ;
+    ex:provincia       "Chieti" ;
+    ex:comune          "Caramanico Terme" ;
+    ex:dataInizio      "2026-06-07"^^xsd:date ;
+    ex:dataFine        "2026-06-14"^^xsd:date ;
+    ex:rischioSovraffollamento  "basso" ;
+    ex:capacitaMassima          500 ;
+    ex:accessibilitaDisabili    "parziale" ;
+    ex:eventLocation            ex:SentieroDelloSpirito .
+
+ex:NotteDeiSerpenti  a ex:LocalEvent ;
+    ex:nome            "Festa dei Serpari – Cocullo"@it ;
+    ex:descrizione     "Rito millenario in onore di San Domenico con processione di serpenti vivi."@it ;
+    ex:provincia       "L'Aquila" ;
+    ex:comune          "Cocullo" ;
+    ex:dataInizio      "2026-05-01"^^xsd:date ;
+    ex:dataFine        "2026-05-01"^^xsd:date ;
+    ex:rischioSovraffollamento  "critico" ;
+    ex:capacitaMassima          2000 ;
+    ex:accessibilitaDisabili    "assente" .
+
+# ==============================================================================
+# ISTANZE – Produttori / Operatori Commerciali Locali
+# ==============================================================================
+
+ex:CantinaMasciarelli  a ex:LocalProducer ;
+    ex:nome                "Cantina Masciarelli"@it ;
+    ex:descrizione         "Storica cantina produttrice di Montepulciano d'Abruzzo e Trebbiano."@it ;
+    ex:provincia           "Chieti" ;
+    ex:comune              "San Martino sulla Marrucina" ;
+    ex:categoriaCommerciale "enogastronomia" ;
+    ex:dimensioneOperatore "grande" ;
+    ex:producerNear        ex:CostaDeiTrabocchi .
+
+ex:AziendaAgricolaDiLeo  a ex:LocalProducer ;
+    ex:nome                "Azienda Agricola Di Leo"@it ;
+    ex:descrizione         "Piccolo produttore biologico di olio extravergine e ortaggi di montagna."@it ;
+    ex:provincia           "L'Aquila" ;
+    ex:comune              "Navelli" ;
+    ex:categoriaCommerciale "agroalimentare" ;
+    ex:dimensioneOperatore "micro" ;
+    ex:producerNear        ex:RoccaCalascio .
+
+ex:PastificioVerrigni  a ex:LocalProducer ;
+    ex:nome                "Pastificio Verrigni"@it ;
+    ex:descrizione         "Pastificio artigianale teramano con trafilatura in oro, produzione limitata dal 1898."@it ;
+    ex:provincia           "Teramo" ;
+    ex:comune              "Roseto degli Abruzzi" ;
+    ex:categoriaCommerciale "agroalimentare" ;
+    ex:dimensioneOperatore "piccolo" ;
+    ex:producerNear        ex:CattedraleSanBerardo .
+
+ex:CoopPastoriziaMaiella  a ex:LocalProducer ;
+    ex:nome                "Cooperativa Pastorizia della Maiella"@it ;
+    ex:descrizione         "Cooperativa di pastori locali che produce pecorino, ricotta e carne d'agnello."@it ;
+    ex:provincia           "Chieti" ;
+    ex:comune              "Caramanico Terme" ;
+    ex:categoriaCommerciale "agroalimentare" ;
+    ex:dimensioneOperatore "micro" ;
+    ex:producerNear        ex:SentieroDelloSpirito .
+
+ex:AlbergoDiffusoSextantio  a ex:LocalProducer ;
+    ex:nome                "Sextantio – Albergo Diffuso"@it ;
+    ex:descrizione         "Struttura ricettiva diffusa nel borgo di Santo Stefano di Sessanio, recupero architettonico."@it ;
+    ex:provincia           "L'Aquila" ;
+    ex:comune              "Santo Stefano di Sessanio" ;
+    ex:categoriaCommerciale "ricettivita" ;
+    ex:dimensioneOperatore "medio" ;
+    ex:producerNear        ex:SantoStefanoSessanio .
